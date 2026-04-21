@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Webploeg – Websites op maat</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --ink:#0A0F1E;--ink-soft:#1C2340;--ink-mid:#2E3858;
+  --slate:#3D4560;--muted:#6B7494;--line:#D8DDE8;
+  --surface:#ECEEF4;--white:#FFFFFF;
+  --gold:#C9A84C;--gold-light:#F9F2E1;--gold-dark:#A8863A;
+  --teal:#0E9E8E;--teal-light:#DCF2F0;--teal-dark:#0B8070;
+  --font:'Outfit',sans-serif;
+  --r:12px;--rl:20px;
+  --sh:0 2px 16px rgba(10,15,30,0.08);
+  --sh2:0 12px 48px rgba(10,15,30,0.14);
+}
+body{font-family:var(--font);color:var(--ink);background:var(--surface);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;font-size:15px}
+a{text-decoration:none;color:inherit}
+ul{list-style:none}
+button{cursor:pointer;font-family:var(--font)}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+h1,h2,h3,h4{font-family:var(--font);line-height:1.1;letter-spacing:-0.03em}
+h1{font-size:clamp(30px,4.8vw,56px);font-weight:800}
+h2{font-size:clamp(24px,3.5vw,42px);font-weight:800}
+h3{font-size:clamp(17px,2vw,22px);font-weight:700}
+h4{font-size:16px;font-weight:700}
+
+/* ── LOGO COMPONENT ── */
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
+.logo-icon{display:flex;align-items:center;justify-content:center;width:36px;height:36px}
+.logo-name{font-size:19px;font-weight:800;color:#fff;letter-spacing:-0.4px;line-height:1}
+.logo-name small{display:block;font-size:10px;font-weight:400;color:rgba(255,255,255,0.45);letter-spacing:0.3px;margin-top:1px}
+
+/* NAV */
+nav{background:var(--ink);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,0.06)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:66px}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:14px;font-weight:500;color:rgba(255,255,255,0.58);transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:#fff}
+.nav-cta{background:var(--gold)!important;color:var(--ink)!important;padding:9px 20px;border-radius:8px;font-weight:700!important;font-size:13px!important;transition:background .2s!important}
+.nav-cta:hover{background:var(--gold-dark)!important}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;padding:4px;cursor:pointer}
+.ham span{display:block;width:22px;height:1.5px;background:rgba(255,255,255,0.7);border-radius:2px;transition:all .3s}
+.ham.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.ham.open span:nth-child(2){opacity:0}
+.ham.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mob-nav{display:none;background:var(--ink-soft);flex-direction:column;gap:2px;padding:16px 20px}
+.mob-nav.open{display:flex}
+.mob-nav a{font-size:15px;font-weight:500;padding:12px 14px;border-radius:9px;color:rgba(255,255,255,0.7)}
+.mob-nav a:hover{background:rgba(255,255,255,0.05);color:#fff}
+.mob-cta{background:var(--gold)!important;color:var(--ink)!important;text-align:center;font-weight:700!important;margin-top:8px}
+
+/* HERO */
+.hero{background:var(--ink);padding:88px 0 76px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-160px;right:-120px;width:600px;height:600px;background:radial-gradient(circle,rgba(201,168,76,0.1) 0%,transparent 65%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-80px;left:-60px;width:360px;height:360px;background:radial-gradient(circle,rgba(14,158,142,0.07) 0%,transparent 70%);pointer-events:none}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;position:relative;z-index:1}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(201,168,76,0.13);border:1px solid rgba(201,168,76,0.28);color:#E8C97A;font-size:12px;font-weight:600;padding:5px 14px;border-radius:100px;margin-bottom:22px}
+.hero-eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.hero h1{color:#fff;margin-bottom:18px}
+.hero h1 em{color:var(--gold);font-style:normal}
+.hero-sub{font-size:16px;color:rgba(255,255,255,0.62);line-height:1.8;margin-bottom:32px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px}
+.btn-gold{background:var(--gold);color:var(--ink);font-weight:700;font-size:15px;padding:13px 26px;border-radius:9px;border:none;cursor:pointer;transition:all .2s;display:inline-block}
+.btn-gold:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.3)}
+.btn-str{background:transparent;color:rgba(255,255,255,0.78);font-size:15px;font-weight:500;padding:13px 26px;border-radius:9px;border:1px solid rgba(255,255,255,0.2);display:inline-block;transition:all .2s}
+.btn-str:hover{border-color:rgba(255,255,255,0.5);color:#fff}
+.hero-stats{display:flex;gap:32px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.09)}
+.s-num{font-size:28px;font-weight:800;color:#fff;letter-spacing:-1px}
+.s-lbl{font-size:12px;color:rgba(255,255,255,0.42);margin-top:3px}
+.hero-visual{display:flex;flex-direction:column;gap:12px}
+.hc{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:14px;padding:20px}
+.hc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.hc-t{font-size:12px;font-weight:600;color:rgba(255,255,255,0.5)}
+.live{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--teal);font-weight:600}
+.pd{width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pu 2s infinite}
+@keyframes pu{0%,100%{box-shadow:0 0 0 0 rgba(14,158,142,.4)}50%{box-shadow:0 0 0 6px rgba(14,158,142,0)}}
+.bl{font-size:11px;color:rgba(255,255,255,0.38);margin-bottom:5px}
+.bt{height:6px;background:rgba(255,255,255,0.07);border-radius:3px;margin-bottom:4px;overflow:hidden}
+.bf{height:100%;background:linear-gradient(90deg,var(--teal),#5DCFBE);border-radius:3px}
+.bm{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,0.3);margin-bottom:14px}
+.bm .hi{color:var(--teal);font-weight:700}
+.mts{display:flex;gap:8px}
+.mtx{flex:1;background:rgba(255,255,255,0.04);border-radius:8px;padding:10px;text-align:center}
+.mtx .v{font-size:18px;font-weight:800;color:#fff}
+.mtx .l{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px}
+.ntf{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:12px 16px;display:flex;align-items:center;gap:10px}
+.ndot{width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.nt-t{font-size:12px;color:rgba(255,255,255,0.85);font-weight:500;margin-bottom:2px}
+.nt-s{font-size:10px;color:rgba(255,255,255,0.38)}
+
+/* PROOF BAR */
+.proof-bar{background:var(--ink-soft);border-bottom:1px solid rgba(255,255,255,0.06);padding:14px 0}
+.proof-inner{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 24px}
+.pi{display:flex;align-items:center;gap:7px;font-size:13px;color:rgba(255,255,255,0.55);font-weight:500}
+.pdv{width:1px;height:16px;background:rgba(255,255,255,0.1)}
+
+/* SECTIONS */
+.sec{padding:84px 0}
+.s-white{background:var(--white)}
+.s-white h2,.s-white h3,.s-white h4{color:var(--ink)}
+.s-white p:not(.s-sub),.s-white .s-sub{color:var(--slate)}
+.s-surf{background:var(--surface)}
+.s-surf h2,.s-surf h3,.s-surf h4{color:var(--ink)}
+.s-surf p,.s-surf .s-sub{color:var(--slate)}
+.s-ink{background:var(--ink);color:#fff}
+.s-ink-soft{background:var(--ink-soft);color:#fff}
+
+.chip{display:inline-block;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:14px}
+.chip-teal{color:var(--teal-dark);background:var(--teal-light)}
+.chip-gold{color:var(--gold-dark);background:var(--gold-light)}
+.chip-inv-teal{color:#5DCFBE;background:rgba(14,158,142,0.13)}
+.chip-inv-gold{color:#E8C97A;background:rgba(201,168,76,0.13)}
+
+.s-title{margin-bottom:14px}
+.s-title em{color:var(--teal);font-style:normal}
+.s-title-gold em{color:var(--gold)!important}
+.s-sub{font-size:16px;line-height:1.78;max-width:540px;margin-bottom:40px;color:var(--slate)}
+.s-ink .s-sub,.s-ink-soft .s-sub{color:rgba(255,255,255,0.55)}
+.ctr{text-align:center}
+.ctr .s-sub{margin:0 auto 40px}
+.divx{width:36px;height:2.5px;background:var(--gold);border-radius:2px;margin:12px 0 20px}
+
+/* PROBLEM/SOLUTION */
+.ps-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;margin-top:44px}
+.prob-list{display:flex;flex-direction:column;gap:12px}
+.prob-item{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border-radius:var(--r);padding:18px;border-left:3px solid #D94F4F}
+.prob-ico{font-size:20px;flex-shrink:0;margin-top:1px}
+.prob-item h4{font-size:14px;font-weight:700;margin-bottom:3px;color:var(--ink)}
+.prob-item p{font-size:13px;color:var(--slate);line-height:1.65}
+.sol-box{background:var(--ink);border-radius:var(--rl);padding:36px;position:relative;overflow:hidden}
+.sol-box::before{content:'';position:absolute;bottom:-50px;right:-50px;width:180px;height:180px;background:rgba(201,168,76,0.06);border-radius:50%}
+.sol-box h3{font-size:21px;font-weight:800;margin-bottom:22px;color:#fff}
+.sol-pts{display:flex;flex-direction:column;gap:14px}
+.sol-pts li{display:flex;gap:11px;font-size:14px;color:rgba(255,255,255,0.82);line-height:1.65;align-items:flex-start}
+.sol-pts li strong{color:#fff}
+.chk{width:20px;height:20px;border-radius:50%;background:rgba(14,158,142,0.2);border:1px solid rgba(14,158,142,0.4);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--teal);flex-shrink:0;margin-top:2px}
+
+/* SERVICES */
+.srv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+.srv-card{background:var(--white);border-radius:var(--rl);padding:28px;border:1.5px solid var(--line);transition:all .25s;position:relative;overflow:hidden}
+.srv-card::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.srv-card:hover{transform:translateY(-3px);box-shadow:var(--sh2);border-color:var(--gold)}
+.srv-card:hover::after{transform:scaleX(1)}
+.srv-ico{width:46px;height:46px;background:var(--gold-light);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px}
+.srv-card h3{font-size:17px;font-weight:700;margin-bottom:8px;color:var(--ink)}
+.srv-card p{font-size:13px;color:var(--slate);line-height:1.72;margin-bottom:16px}
+.srv-res{background:var(--teal-light);color:var(--teal-dark);font-size:12px;font-weight:700;padding:7px 12px;border-radius:7px;display:inline-block}
+
+/* WHY */
+.why-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.why-pts{display:flex;flex-direction:column;gap:20px;margin-top:22px}
+.why-pt{display:flex;gap:14px;align-items:flex-start}
+.why-n{font-size:30px;font-weight:800;color:var(--line);line-height:1;min-width:40px}
+.why-pt h4{font-size:15px;font-weight:700;margin-bottom:3px;color:var(--ink)}
+.why-pt p{font-size:13px;color:var(--slate);line-height:1.65}
+.why-cards{display:flex;flex-direction:column;gap:14px}
+.wc{background:var(--white);border-radius:var(--rl);padding:22px;border:1.5px solid var(--line)}
+.wc-dark{background:var(--ink);border-color:transparent}
+.av-row{display:flex;align-items:center;gap:12px}
+.av{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--ink),var(--ink-mid));display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff;flex-shrink:0;border:2px solid rgba(201,168,76,0.5)}
+.av-t strong{display:block;font-size:14px;font-weight:700;color:var(--ink)}
+.av-t span{font-size:12px;color:var(--slate)}
+.bdg-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.bdg{background:var(--surface);border:1.5px solid var(--line);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--ink-mid)}
+.bign{font-size:38px;font-weight:800;color:#fff;letter-spacing:-1.5px;line-height:1}
+.wc-dark p{font-size:13px;color:rgba(255,255,255,0.52);margin-top:4px}
+
+/* PROCESS */
+.proc-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:48px;position:relative}
+.proc-steps::before{content:'';position:absolute;top:26px;left:12%;right:12%;height:1.5px;background:linear-gradient(90deg,var(--ink-mid),var(--gold));z-index:0;opacity:0.2}
+.step{background:var(--white);border-radius:var(--rl);padding:24px 18px;border:1.5px solid var(--line);text-align:center;position:relative;z-index:1}
+.step-n{width:50px;height:50px;border-radius:50%;background:var(--ink);color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.step h4{font-size:14px;font-weight:700;margin-bottom:6px;color:var(--ink)}
+.step p{font-size:12px;color:var(--slate);line-height:1.65}
+
+/* TESTIMONIALS */
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+.tc{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:var(--rl);padding:26px}
+.stars{color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:12px}
+.tc blockquote{font-size:14px;color:rgba(255,255,255,0.75);line-height:1.78;margin-bottom:18px;font-style:italic}
+.tc-auth{display:flex;align-items:center;gap:10px}
+.tc-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--teal-dark),var(--teal));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.tc-name{font-size:13px;font-weight:700;color:#fff}
+.tc-co{font-size:11px;color:rgba(255,255,255,0.38)}
+
+/* CTA BANNER */
+.cta-b{background:var(--ink-soft);padding:80px 0;position:relative;overflow:hidden}
+.cta-b::before{content:'';position:absolute;top:-100px;right:-60px;width:400px;height:400px;background:radial-gradient(circle,rgba(201,168,76,0.1) 0%,transparent 65%);pointer-events:none}
+.cta-inner{text-align:center;max-width:660px;margin:0 auto;position:relative;z-index:1}
+.cta-inner h2{color:#fff;margin-bottom:12px}
+.cta-inner p{font-size:17px;color:rgba(255,255,255,0.62);margin-bottom:28px;line-height:1.75}
+.btn-gold-lg{background:var(--gold);color:var(--ink);font-weight:800;font-size:16px;padding:15px 32px;border-radius:10px;display:inline-block;transition:all .2s;border:none;cursor:pointer}
+.btn-gold-lg:hover{background:var(--gold-dark);transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,0.3)}
+.guar{font-size:12px;color:rgba(255,255,255,0.38);margin-top:16px}
+
+/* ABOUT */
+.about-hero{background:var(--ink);padding:84px 0 72px;position:relative;overflow:hidden}
+.about-hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;background:radial-gradient(circle,rgba(201,168,76,0.08) 0%,transparent 65%)}
+.about-hero h1{color:#fff;margin-bottom:14px}
+.about-hero p{font-size:17px;color:rgba(255,255,255,0.58);max-width:560px;line-height:1.78}
+.val-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}
+.vc{border:1px solid rgba(255,255,255,0.09);border-radius:var(--rl);padding:24px;background:rgba(255,255,255,0.04)}
+.vc-ico{font-size:24px;margin-bottom:12px}
+.vc h4{color:#fff;font-size:16px;font-weight:700;margin-bottom:6px}
+.vc p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.65}
+.story p{font-size:15px;color:var(--slate);line-height:1.88;margin-bottom:18px}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:36px}
+.sc{background:var(--white);border-radius:var(--rl);padding:24px;border:1.5px solid var(--line);text-align:center}
+.sc .n{font-size:32px;font-weight:800;color:var(--ink);letter-spacing:-1px}
+.sc .l{font-size:12px;color:var(--slate);margin-top:4px}
+
+/* DIENSTEN PAGE */
+.srv-hero{background:var(--white);padding:76px 0 56px;border-bottom:1.5px solid var(--line)}
+.srv-hero h1{margin-bottom:12px;color:var(--ink)}
+.srv-hero p{font-size:17px;color:var(--slate);max-width:520px;line-height:1.75}
+.d-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:44px}
+.d-card{background:var(--white);border-radius:var(--rl);padding:32px;border:1.5px solid var(--line)}
+.d-card.feat{border:2px solid var(--teal)}
+.d-card h3{font-size:19px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:8px;color:var(--ink)}
+.d-card .dsc{font-size:14px;color:var(--slate);line-height:1.75;margin-bottom:18px}
+.f-list{display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.f-list li{font-size:13px;display:flex;gap:9px;align-items:flex-start;color:var(--ink)}
+.f-list li::before{content:'✓';background:var(--teal);color:#fff;width:17px;height:17px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px}
+.inv-note{background:var(--surface);border-radius:var(--rl);padding:32px;border:1.5px solid var(--line);margin-top:40px}
+.inv-note h3{font-size:19px;font-weight:800;margin-bottom:10px;color:var(--ink)}
+.inv-note p{font-size:14px;color:var(--slate);line-height:1.75;margin-bottom:18px}
+.pay-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px}
+.pay-card{background:var(--white);border-radius:var(--r);padding:18px;border:1.5px solid var(--line)}
+.pay-card h4{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:5px}
+.pay-card p{font-size:13px;color:var(--slate);line-height:1.6}
+.hosting-box{background:var(--ink);border-radius:var(--r);padding:22px;margin-top:14px}
+.hosting-box h4{font-size:15px;font-weight:700;color:#fff;margin-bottom:6px}
+.hosting-box p{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.65}
+
+/* ── FAQ NIEUW DESIGN ── */
+.faq-wrap{max-width:780px;margin:48px auto 0}
+.faq-item{border-radius:var(--r);overflow:hidden;margin-bottom:10px;background:var(--white);border:1.5px solid var(--line);transition:border-color .2s}
+.faq-item.open{border-color:var(--gold)}
+.faq-btn{width:100%;text-align:left;background:transparent;border:none;padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;cursor:pointer;font-family:var(--font)}
+.faq-btn-q{font-size:15px;font-weight:700;color:var(--ink);line-height:1.4;text-align:left}
+.faq-icon{width:28px;height:28px;border-radius:50%;background:var(--surface);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .25s}
+.faq-icon svg{transition:transform .3s}
+.faq-item.open .faq-icon{background:var(--gold);border-color:var(--gold)}
+.faq-item.open .faq-icon svg{transform:rotate(45deg)}
+.faq-item.open .faq-icon path{stroke:#fff}
+.faq-body{display:none;padding:0 22px 20px;font-size:14px;color:var(--slate);line-height:1.75;border-top:1px solid var(--line)}
+.faq-body.open{display:block}
+
+/* CONTACT */
+.con-hero{background:var(--ink-soft);padding:76px 0 56px;position:relative;overflow:hidden}
+.con-hero::before{content:'';position:absolute;top:-100px;right:-80px;width:360px;height:360px;background:radial-gradient(circle,rgba(14,158,142,0.09) 0%,transparent 65%)}
+.con-hero h1{color:#fff;margin-bottom:10px}
+.con-hero p{font-size:17px;color:rgba(255,255,255,0.58);max-width:480px;line-height:1.75}
+.con-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:44px;align-items:start}
+.con-form{background:var(--white);border-radius:var(--rl);padding:36px;box-shadow:var(--sh2);border:1.5px solid var(--line)}
+.con-form h3{font-size:20px;font-weight:800;margin-bottom:5px;color:var(--ink)}
+.con-form .sub{font-size:13px;color:var(--slate);margin-bottom:24px}
+.fg{margin-bottom:15px}
+.fg label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--ink)}
+.fg input,.fg select,.fg textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:12px 14px;font-size:14px;font-family:var(--font);color:var(--ink);background:var(--surface);transition:border-color .2s;outline:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--teal);background:#fff}
+.fg input::placeholder,.fg textarea::placeholder{color:var(--muted)}
+.fg textarea{min-height:108px;resize:vertical}
+.f-sub{width:100%;background:var(--teal);color:#fff;border:none;padding:14px;border-radius:9px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;font-family:var(--font)}
+.f-sub:hover{background:var(--teal-dark);transform:translateY(-1px)}
+.f-note{font-size:11px;color:var(--muted);margin-top:10px;text-align:center}
+.f-ok{display:none;background:var(--teal-light);border:1px solid rgba(14,158,142,0.3);border-radius:var(--r);padding:16px;text-align:center;color:var(--teal-dark);font-weight:700;font-size:14px;margin-top:14px}
+.con-info{background:var(--ink);border-radius:var(--rl);padding:28px}
+.con-info h3{font-size:20px;font-weight:800;margin-bottom:10px;color:#fff}
+.con-info .intro{font-size:14px;color:rgba(255,255,255,0.55);line-height:1.75;margin-bottom:20px}
+.info-items{display:flex;flex-direction:column;gap:10px}
+.ii{background:rgba(255,255,255,0.05);border-radius:var(--r);padding:16px 18px;border:1px solid rgba(255,255,255,0.09);display:flex;gap:12px;align-items:flex-start}
+.ii-ico{font-size:18px;flex-shrink:0;margin-top:2px}
+.ii strong{display:block;font-size:13px;font-weight:700;margin-bottom:3px;color:#fff}
+.ii p{font-size:13px;color:rgba(255,255,255,0.52)}
+.ii a{color:var(--gold);font-size:13px;font-weight:500}
+.scan-b{background:rgba(201,168,76,0.1);border-radius:var(--r);padding:18px;margin-top:12px;border:1px solid rgba(201,168,76,0.22)}
+.scan-b h4{color:var(--gold);font-size:14px;font-weight:700;margin-bottom:5px}
+.scan-b p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.6}
+
+/* FOOTER */
+footer{background:var(--ink);padding:52px 0 24px;border-top:1px solid rgba(255,255,255,0.06)}
+.ft{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;margin-bottom:44px}
+.fb p{font-size:13px;line-height:1.75;max-width:220px;color:rgba(255,255,255,0.4);margin-top:10px}
+.fc h5{font-size:12px;font-weight:700;color:rgba(255,255,255,0.35);margin-bottom:14px;letter-spacing:1px;text-transform:uppercase}
+.fc ul{display:flex;flex-direction:column;gap:9px}
+.fc ul a{font-size:13px;color:rgba(255,255,255,0.48);transition:color .2s}
+.fc ul a:hover{color:#fff}
+.fbot{border-top:1px solid rgba(255,255,255,0.07);padding-top:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;font-size:12px;color:rgba(255,255,255,0.28)}
+.fbot a{color:var(--gold)}
+
+/* LOGO in footer */
+.foot-logo{display:flex;align-items:center;gap:10px}
+.foot-logo-name{font-size:18px;font-weight:800;color:#fff}
+.foot-logo-name small{display:block;font-size:10px;font-weight:400;color:rgba(255,255,255,0.4);letter-spacing:0.3px}
+
+.page{display:none}
+.page.active{display:block}
+
+@media(max-width:900px){
+  .hero-grid,.ps-grid,.why-grid,.con-grid{grid-template-columns:1fr}
+  .hero-visual{display:none}
+  .srv-grid,.testi-grid,.val-grid{grid-template-columns:1fr 1fr}
+  .proc-steps,.d-grid,.pay-grid{grid-template-columns:1fr}
+  .proc-steps::before{display:none}
+  .ft{grid-template-columns:1fr 1fr}
+  .stats-row{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .ham{display:flex}
+  .sec{padding:52px 0}
+  .hero{padding:56px 0 48px}
+  .srv-grid,.testi-grid,.val-grid,.stats-row{grid-template-columns:1fr}
+  .ft{grid-template-columns:1fr}
+  .hero-stats{flex-wrap:wrap;gap:16px}
+  .hero-btns{flex-direction:column}
+  .proof-inner{flex-direction:column;align-items:center;gap:10px}
+  .pdv{display:none}
+  .fbot{flex-direction:column;text-align:center}
+  .con-form{padding:24px 18px}
+  .con-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+<div class="container nav-inner">
+
+  <!-- LOGO: gouden driehoek (uit jouw logo) + tekst -->
+  <a class="logo-wrap" href="#" onclick="show('home');return false">
+    <svg class="logo-icon" width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Gouden driehoek, exact de shape van jouw logo maar in goud -->
+      <polygon points="6,4 6,32 30,18" fill="#C9A84C" rx="3"/>
+      <!-- Subtiele highlight -->
+      <polygon points="6,4 6,18 18,18" fill="rgba(255,255,255,0.12)"/>
+    </svg>
+    <div>
+      <div class="logo-name">Webploeg<div style="display:inline-block;width:5px;height:5px;background:var(--gold);border-radius:50%;margin-left:2px;margin-bottom:2px;vertical-align:middle"></div></div>
+      <div style="font-size:10px;color:rgba(255,255,255,0.4);font-weight:400;letter-spacing:0.3px;margin-top:1px">Websites op maat</div>
+    </div>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#" onclick="show('home');return false" id="nl-home" class="active">Home</a></li>
+    <li><a href="#" onclick="show('diensten');return false" id="nl-diensten">Diensten</a></li>
+    <li><a href="#" onclick="show('over');return false" id="nl-over">Over ons</a></li>
+    <li><a href="#" onclick="show('contact');return false" id="nl-contact">Contact</a></li>
+    <li><a href="#" onclick="show('contact');return false" class="nav-cta">Offerte aanvragen</a></li>
+  </ul>
+  <button class="ham" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
+</div>
+</nav>
+
+<div class="mob-nav" id="mobNav">
+  <a href="#" onclick="show('home');toggleMob();return false">Home</a>
+  <a href="#" onclick="show('diensten');toggleMob();return false">Diensten</a>
+  <a href="#" onclick="show('over');toggleMob();return false">Over ons</a>
+  <a href="#" onclick="show('contact');toggleMob();return false">Contact</a>
+  <a href="#" onclick="show('contact');toggleMob();return false" class="mob-cta">Offerte aanvragen →</a>
+</div>
+
+<!-- ======= HOME ======= -->
+<div class="page active" id="page-home">
+<section class="hero">
+<div class="container hero-grid">
+  <div>
+    <div class="hero-eyebrow"><span></span>Webdesign &amp; Conversie-optimalisatie</div>
+    <h1>Jouw website die echt <em>klanten</em> binnenhaalt</h1>
+    <p class="hero-sub">Webploeg bouwt websites die bezoekers omzetten in betalende klanten. Geen mooie plaatjes — maar resultaten die je terugziet in je agenda.</p>
+    <div class="hero-btns">
+      <a href="#" class="btn-gold" onclick="show('contact');return false">Gratis website scan aanvragen</a>
+      <a href="#" class="btn-str" onclick="show('diensten');return false">Onze diensten bekijken</a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="s-num">+120%</div><div class="s-lbl">Meer leads gemiddeld</div></div>
+      <div><div class="s-num">50+</div><div class="s-lbl">Tevreden klanten</div></div>
+      <div><div class="s-num">98%</div><div class="s-lbl">Klanttevredenheid</div></div>
+    </div>
+  </div>
+  <div class="hero-visual">
+    <div class="hc">
+      <div class="hc-head"><span class="hc-t">Website Prestaties</span><span class="live"><span class="pd"></span>Live</span></div>
+      <div class="bl">Conversieratio</div>
+      <div class="bt"><div class="bf" style="width:78%"></div></div>
+      <div class="bm"><span>0%</span><span class="hi">7.8%</span><span>10%</span></div>
+      <div class="mts">
+        <div class="mtx"><div class="v">234</div><div class="l">Leads/maand</div></div>
+        <div class="mtx"><div class="v">€18k</div><div class="l">Omzet via site</div></div>
+      </div>
+    </div>
+    <div class="ntf"><div class="ndot"></div><div><div class="nt-t">Nieuwe aanvraag ontvangen</div><div class="nt-s">Mark de Vries — Loodgietersbedrijf • 2 min geleden</div></div></div>
+  </div>
+</div>
+</section>
+
+<div class="proof-bar">
+<div class="container proof-inner">
+  <div class="pi">⭐ 4.9/5 beoordeling</div><div class="pdv"></div>
+  <div class="pi">🏆 50+ projecten opgeleverd</div><div class="pdv"></div>
+  <div class="pi">⚡ Gemiddeld 3 weken doorlooptijd</div><div class="pdv"></div>
+  <div class="pi">🔒 Geen resultaat = geen aanbeveling</div>
+</div>
+</div>
+
+<section class="sec s-white">
+<div class="container">
+  <span class="chip chip-teal">Het probleem</span>
+  <h2 class="s-title">Jouw website kost je<br>elke dag klanten</h2>
+  <p class="s-sub">De meeste websites zien er prima uit, maar converteren niet. Dat is omzet die maandelijks door je vingers glipt.</p>
+  <div class="ps-grid">
+    <div class="prob-list">
+      <div class="prob-item"><div class="prob-ico">🐌</div><div><h4>Traag &amp; niet mobiel-vriendelijk</h4><p>73% van zoekopdrachten komt van mobiel. Een slechte mobiele ervaring zorgt voor directe afhaak.</p></div></div>
+      <div class="prob-item"><div class="prob-ico">😶</div><div><h4>Geen duidelijke boodschap</h4><p>Bezoekers begrijpen binnen 5 seconden niet wat jij doet. Dan zijn ze weg — naar je concurrent.</p></div></div>
+      <div class="prob-item"><div class="prob-ico">🚫</div><div><h4>Geen duidelijke call-to-actions</h4><p>Je wil dat bezoekers contact opnemen — maar nergens staat duidelijk HOE of WAAROM dat voordelig is.</p></div></div>
+      <div class="prob-item"><div class="prob-ico">📉</div><div><h4>Niet vindbaar in Google</h4><p>Zonder SEO bestaat je website niet. Je concurrent pikt jouw klanten dagelijks weg.</p></div></div>
+    </div>
+    <div class="sol-box">
+      <h3>Wat Webploeg anders doet</h3>
+      <ul class="sol-pts">
+        <li><div class="chk">✓</div><span><strong>Strategie eerst:</strong> we beginnen met jouw klant, niet met design.</span></li>
+        <li><div class="chk">✓</div><span><strong>Conversie-gedreven:</strong> knoppen, teksten en structuur geoptimaliseerd om van bezoeker klant te maken.</span></li>
+        <li><div class="chk">✓</div><span><strong>Mobile-first:</strong> gebouwd voor de smartphone, perfect op desktop.</span></li>
+        <li><div class="chk">✓</div><span><strong>SEO-klaar bij oplevering:</strong> gevonden worden vanaf dag één.</span></li>
+        <li><div class="chk">✓</div><span><strong>Hosting inbegrepen:</strong> altijd snel, veilig en online.</span></li>
+      </ul>
+      <a href="#" class="btn-gold" onclick="show('contact');return false" style="margin-top:24px;display:inline-block">Gratis gesprek inplannen →</a>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="sec s-surf">
+<div class="container">
+  <div class="ctr">
+    <span class="chip chip-teal">Onze diensten</span>
+    <h2 class="s-title">Alles voor een website<br>die resultaat levert</h2>
+  </div>
+  <div class="srv-grid">
+    <div class="srv-card"><div class="srv-ico">🎨</div><h3>Website Design</h3><p>Strakke, professionele websites die jouw merk versterken én bezoekers direct overtuigen om actie te ondernemen.</p><div class="srv-res">Gem. 3× meer contactaanvragen</div></div>
+    <div class="srv-card"><div class="srv-ico">📈</div><h3>Conversie-optimalisatie</h3><p>Wij analyseren en optimaliseren jouw website zodat een groter deel van je bezoekers klant wordt.</p><div class="srv-res">Gem. +120% conversie</div></div>
+    <div class="srv-card"><div class="srv-ico">🔍</div><h3>SEO Websites</h3><p>Websites gebouwd om te scoren in Google. Wij zorgen dat jouw ideale klant jou vindt.</p><div class="srv-res">Top 3 posities binnen 6 mnd</div></div>
+  </div>
+  <div style="text-align:center;margin-top:32px"><a href="#" class="btn-gold" onclick="show('diensten');return false">Alle diensten bekijken →</a></div>
+</div>
+</section>
+
+<section class="sec s-white">
+<div class="container">
+  <div class="why-grid">
+    <div>
+      <span class="chip chip-gold">Waarom Webploeg</span>
+      <h2 class="s-title s-title-gold">Wij bouwen niet<br>zomaar websites</h2>
+      <div class="divx"></div>
+      <p style="color:var(--slate);line-height:1.82;font-size:15px">Webploeg is opgericht met één missie: bedrijven helpen groeien via hun website. Direct contact, snelle levering en websites die écht werken.</p>
+      <div class="why-pts">
+        <div class="why-pt"><div class="why-n">01</div><div><h4>Klantgericht, niet portfolio-gericht</h4><p>We meten succes in leads en omzet voor jou — niet in design awards voor ons.</p></div></div>
+        <div class="why-pt"><div class="why-n">02</div><div><h4>Transparant &amp; no-nonsense</h4><p>Duidelijke afspraken, eerlijke communicatie, geen verborgen kosten.</p></div></div>
+        <div class="why-pt"><div class="why-n">03</div><div><h4>Snel en efficiënt</h4><p>Van briefing tot lancering gemiddeld 3 weken.</p></div></div>
+      </div>
+      <a href="#" class="btn-gold" onclick="show('over');return false" style="margin-top:28px;display:inline-block">Meer over ons →</a>
+    </div>
+    <div class="why-cards">
+      <div class="wc"><div class="av-row"><div class="av">WP</div><div class="av-t"><strong>Webploeg Team</strong><span>Webdesign &amp; Conversie-experts</span></div></div><div class="bdg-wrap"><span class="bdg">UX Design</span><span class="bdg">CRO</span><span class="bdg">SEO</span><span class="bdg">Web Dev</span><span class="bdg">Hosting</span></div></div>
+      <div class="wc wc-dark"><div class="bign">50+</div><p>Succesvolle projecten voor MKB-bedrijven in heel Nederland</p></div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section class="sec s-surf">
+<div class="container">
+  <div class="ctr"><span class="chip chip-teal">Onze aanpak</span><h2 class="s-title">Van idee naar klanten in 4 stappen</h2></div>
+  <div class="proc-steps">
+    <div class="step"><div class="step-n">1</div><h4>Gratis strategiegesprek</h4><p>We bespreken jouw doelen, doelgroep en concurrenten. Geen verplichtingen.</p></div>
+    <div class="step"><div class="step-n">2</div><h4>Strategie &amp; ontwerp</h4><p>We maken een conversiestrategie en design dat past bij jouw merk.</p></div>
+    <div class="step"><div class="step-n">3</div><h4>Bouwen &amp; optimaliseren</h4><p>Jouw website wordt gebouwd, SEO-klaar gemaakt en getest op alle apparaten.</p></div>
+    <div class="step"><div class="step-n">4</div><h4>Lanceren &amp; groeien</h4><p>Live! En daarna blijven we meten en optimaliseren zodat resultaten groeien.</p></div>
+  </div>
+</div>
+</section>
+
+<section class="sec s-ink">
+<div class="container">
+  <div class="ctr"><span class="chip chip-inv-gold">Klanten aan het woord</span><h2 class="s-title" style="color:#fff">Wat onze klanten zeggen</h2></div>
+  <div class="testi-grid">
+    <div class="tc"><div class="stars">★★★★★</div><blockquote>"Binnen 2 maanden na de nieuwe website hadden we 3× zoveel aanvragen. Webploeg heeft precies begrepen wat onze klanten nodig hebben."</blockquote><div class="tc-auth"><div class="tc-av">MV</div><div><div class="tc-name">Mark van Dijk</div><div class="tc-co">Eigenaar, VD Installaties</div></div></div></div>
+    <div class="tc"><div class="stars">★★★★★</div><blockquote>"Eindelijk een bureau dat niet alleen mooie plaatjes maakt, maar ook echt nadenkt over hoe je meer klanten krijgt. Onze omzet is verdubbeld."</blockquote><div class="tc-auth"><div class="tc-av">SB</div><div><div class="tc-name">Sandra Bakker</div><div class="tc-co">Directeur, Bakker Accountancy</div></div></div></div>
+    <div class="tc"><div class="stars">★★★★★</div><blockquote>"Super professioneel en eerlijk. Webploeg leverde op tijd, binnen budget en de site scoort nu top 3 in Google voor onze zoekwoorden."</blockquote><div class="tc-auth"><div class="tc-av">RH</div><div><div class="tc-name">Robin Hoekstra</div><div class="tc-co">Ondernemer, Hoekstra Bouw</div></div></div></div>
+  </div>
+</div>
+</section>
+
+<section class="cta-b">
+<div class="container cta-inner">
+  <h2>Klaar om meer klanten te krijgen via je website?</h2>
+  <p>Plan een gratis en vrijblijvend strategiegesprek. We analyseren jouw huidige website en vertellen je precies wat er beter kan.</p>
+  <a href="#" class="btn-gold-lg" onclick="show('contact');return false">Gratis website scan aanvragen</a>
+  <div class="guar">✓ Geen verplichtingen &nbsp;·&nbsp; ✓ Binnen 24u reactie &nbsp;·&nbsp; ✓ Direct waardevolle inzichten</div>
+</div>
+</section>
+</div>
+
+<!-- ======= DIENSTEN ======= -->
+<div class="page" id="page-diensten">
+<div class="srv-hero">
+<div class="container">
+  <span class="chip chip-teal">Onze diensten</span>
+  <h1>Websites die werken<br>voor jouw bedrijf</h1>
+  <p>Van design tot SEO, hosting en conversie-optimalisatie — alles wat je nodig hebt om online meer klanten te trekken.</p>
+</div>
+</div>
+<section class="sec s-surf">
+<div class="container">
+<div class="d-grid">
+  <div class="d-card" style="border-top:3px solid var(--ink)"><h3>🎨 Website Design</h3><p class="dsc">Strakke, professionele websites die jouw merk versterken én bezoekers direct overtuigen om actie te ondernemen.</p><ul class="f-list"><li>Professioneel maatwerk design</li><li>Mobile-first (perfect op smartphone)</li><li>Snelle laadtijd (Core Web Vitals)</li><li>Duidelijke CTA's op elke pagina</li><li>Opgeleverd in gemiddeld 3 weken</li></ul><a href="#" class="btn-gold" onclick="show('contact');return false">Offerte aanvragen →</a></div>
+  <div class="d-card feat"><h3>📈 Conversie-optimalisatie</h3><p class="dsc">Jouw website trekt bezoekers maar ze nemen geen contact op? Wij analyseren het probleem en optimaliseren tot bezoekers klanten worden.</p><ul class="f-list"><li>Volledige CRO audit van je website</li><li>A/B testing van pagina-elementen</li><li>Heatmaps &amp; gebruikersgedrag analyse</li><li>Optimalisatie van formulieren &amp; funnels</li><li>Maandelijkse rapportage</li></ul><a href="#" class="btn-gold" onclick="show('contact');return false">Gratis CRO scan →</a></div>
+  <div class="d-card" style="border-top:3px solid var(--teal)"><h3>🔍 SEO Websites</h3><p class="dsc">Gevonden worden door klanten die actief zoeken naar jouw diensten. Volledig geoptimaliseerd voor Google.</p><ul class="f-list"><li>Zoekwoordenonderzoek op maat</li><li>Technische SEO (structuur, snelheid)</li><li>Lokale SEO voor regio-bedrijven</li><li>Google Search Console koppeling</li><li>Maandelijkse ranking updates</li></ul><a href="#" class="btn-gold" onclick="show('contact');return false">SEO scan aanvragen →</a></div>
+  <div class="d-card" style="border-top:3px solid var(--gold);background:#FEFCF8"><h3>🌐 Hosting &amp; Beheer</h3><p class="dsc">Wij zorgen dat jouw website altijd snel, veilig en online is. Geen gedoe met techniek.</p><ul class="f-list"><li>Snelle en betrouwbare hosting</li><li>SSL-certificaat (https beveiliging)</li><li>Dagelijkse back-ups</li><li>Software- en beveiligingsupdates</li><li>Technische ondersteuning</li></ul><a href="#" class="btn-gold" onclick="show('contact');return false">Meer informatie →</a></div>
+</div>
+<div class="inv-note">
+  <h3>Investering &amp; betaalopties</h3>
+  <p>Wij geloven dat een goede website een investering is, geen kostenpost. De investering bepalen we altijd samen in overleg. Geen verrassingen achteraf.</p>
+  <div class="pay-grid">
+    <div class="pay-card"><h4>💳 Eenmalige investering</h4><p>Betaal jouw website in één keer af. Je bent direct eigenaar zonder doorlopende verplichtingen.</p></div>
+    <div class="pay-card"><h4>📅 Maandelijks betalen</h4><p>Spreidt de investering over meerdere maanden. Inclusief hosting en onderhoud.</p></div>
+  </div>
+  <div class="hosting-box"><h4>🌐 Hosting altijd inbegrepen</h4><p>Bij elk pakket regelen wij de hosting voor jouw website. Snel, veilig en betrouwbaar.</p></div>
+</div>
+</div>
+</section>
+
+<!-- ── NIEUWE FAQ ── -->
+<section class="sec s-white">
+<div class="container">
+  <div class="ctr">
+    <span class="chip chip-gold">FAQ</span>
+    <h2 class="s-title">Veelgestelde vragen</h2>
+    <p class="s-sub">Heb je een andere vraag? Stuur ons gerust een bericht — we reageren binnen 24 uur.</p>
+  </div>
+  <div class="faq-wrap">
+
+    <div class="faq-item" id="faq1">
+      <button class="faq-btn" onclick="toggleFaq('faq1')">
+        <span class="faq-btn-q">Hoe lang duurt het om een website te laten bouwen?</span>
+        <span class="faq-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke="#3D4560" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </button>
+      <div class="faq-body">Gemiddeld 3 weken van eerste briefing tot lancering. Dat hangt af van de omvang van het project en hoe snel je feedback geeft. We sturen je bij de start een duidelijke planning zodat je altijd weet waar we staan.</div>
+    </div>
+
+    <div class="faq-item" id="faq2">
+      <button class="faq-btn" onclick="toggleFaq('faq2')">
+        <span class="faq-btn-q">Wat kost een website bij Webploeg?</span>
+        <span class="faq-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke="#3D4560" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </button>
+      <div class="faq-body">De investering bepalen we altijd samen in overleg — afhankelijk van jouw wensen, het aantal pagina's en de gewenste functionaliteiten. Je kunt eenmalig betalen of gespreid via maandelijkse termijnen. Na een gratis gesprek sturen we altijd een heldere offerte zonder verrassingen.</div>
+    </div>
+
+    <div class="faq-item" id="faq3">
+      <button class="faq-btn" onclick="toggleFaq('faq3')">
+        <span class="faq-btn-q">Kan ik mijn website daarna zelf bewerken?</span>
+        <span class="faq-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke="#3D4560" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </button>
+      <div class="faq-body">Ja. We bouwen op een gebruiksvriendelijk CMS waar je zelf teksten en afbeeldingen kunt aanpassen. Bij oplevering geven we je een persoonlijke instructie zodat je meteen zelfstandig aan de slag kunt.</div>
+    </div>
+
+    <div class="faq-item" id="faq4">
+      <button class="faq-btn" onclick="toggleFaq('faq4')">
+        <span class="faq-btn-q">Regelen jullie ook de hosting?</span>
+        <span class="faq-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke="#3D4560" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </button>
+      <div class="faq-body">Ja, absoluut. Hosting is altijd onderdeel van onze samenwerking. Wij zorgen voor snelle, veilige hosting inclusief SSL-certificaat, dagelijkse back-ups en beveiligingsupdates. Jij hoeft nergens aan te denken.</div>
+    </div>
+
+    <div class="faq-item" id="faq5">
+      <button class="faq-btn" onclick="toggleFaq('faq5')">
+        <span class="faq-btn-q">Werken jullie ook voor kleine bedrijven of ZZP'ers?</span>
+        <span class="faq-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke="#3D4560" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </button>
+      <div class="faq-body">Absoluut. We werken voor MKB-bedrijven, ZZP'ers en startups. Of je nu 1 of 50 medewerkers hebt — als je serieus klanten wilt trekken via je website, kunnen wij je helpen.</div>
+    </div>
+
+    <div class="faq-item" id="faq6">
+      <button class="faq-btn" onclick="toggleFaq('faq6')">
+        <span class="faq-btn-q">Wat als mijn website al bestaat — kunnen jullie die verbeteren?</span>
+        <span class="faq-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 2V12M2 7H12" stroke="#3D4560" stroke-width="2" stroke-linecap="round"/></svg>
+        </span>
+      </button>
+      <div class="faq-body">Ja, zeker. We bieden ook conversie-optimalisatie voor bestaande websites. We analyseren wat er niet werkt en optimaliseren gericht — zonder dat je een volledig nieuwe website hoeft te laten bouwen.</div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<section class="cta-b">
+<div class="container cta-inner">
+  <h2>Welke dienst past bij jou?</h2>
+  <p>Plan een gratis gesprek en we adviseren je eerlijk over de beste aanpak voor jouw bedrijf en budget.</p>
+  <a href="#" class="btn-gold-lg" onclick="show('contact');return false">Gratis adviesgesprek plannen</a>
+  <div class="guar">✓ Geen verplichtingen &nbsp;·&nbsp; ✓ Eerlijk advies &nbsp;·&nbsp; ✓ Flexibele betaalopties</div>
+</div>
+</section>
+</div>
+
+<!-- ======= OVER ======= -->
+<div class="page" id="page-over">
+<div class="about-hero">
+<div class="container" style="position:relative;z-index:1">
+  <span class="chip chip-inv-teal">Over Webploeg</span>
+  <h1>Wij bouwen websites<br>die geld opleveren</h1>
+  <p>Webploeg is opgericht vanuit frustratie met webdesign bureaus die mooie websites maken zonder te denken aan resultaat.</p>
+  <div class="val-grid">
+    <div class="vc"><div class="vc-ico">🎯</div><h4>Resultaatgedreven</h4><p>Elke beslissing op basis van wat meer leads en omzet oplevert.</p></div>
+    <div class="vc"><div class="vc-ico">🤝</div><h4>Partnerschap</h4><p>Wij denken mee als partner. Jouw groei is ons succes.</p></div>
+    <div class="vc"><div class="vc-ico">💡</div><h4>Transparantie</h4><p>Duidelijke doelen, meetbare resultaten en eerlijke communicatie — altijd.</p></div>
+  </div>
+</div>
+</div>
+<section class="sec s-white">
+<div class="container">
+  <div style="max-width:700px">
+    <span class="chip chip-gold">Ons verhaal</span>
+    <h2 class="s-title s-title-gold">Waarom Webploeg bestaat</h2>
+    <div class="divx"></div>
+    <div class="story">
+      <p>Webploeg is ontstaan uit een eenvoudige observatie: de meeste MKB-bedrijven hebben een website die er redelijk uitziet, maar die nauwelijks klanten oplevert.</p>
+      <p>Wij geloofden dat het anders moest. Een website moet een verkooptool zijn, geen digitale brochure. Dus combineerden we webdesign met conversie-optimalisatie, hosting en SEO — en richtten Webploeg op.</p>
+      <p>Vandaag helpen we MKB-bedrijven in heel Nederland met websites die echt werken. Geen beloftes — maar resultaten die je terugziet in je agenda, je mailbox en je bankrekening.</p>
+    </div>
+    <div class="stats-row">
+      <div class="sc"><div class="n">50+</div><div class="l">Projecten opgeleverd</div></div>
+      <div class="sc"><div class="n">98%</div><div class="l">Klanttevredenheid</div></div>
+      <div class="sc"><div class="n">3 wk</div><div class="l">Gem. doorlooptijd</div></div>
+    </div>
+  </div>
+</div>
+</section>
+<section class="cta-b">
+<div class="container cta-inner">
+  <h2>Maak kennis met Webploeg</h2>
+  <p>Plan een vrijblijvend gesprek. We luisteren, denken mee en geven je eerlijk advies over je website.</p>
+  <a href="#" class="btn-gold-lg" onclick="show('contact');return false">Neem contact op →</a>
+</div>
+</section>
+</div>
+
+<!-- ======= CONTACT ======= -->
+<div class="page" id="page-contact">
+<div class="con-hero">
+<div class="container" style="position:relative;z-index:1">
+  <span class="chip chip-inv-teal">Contact</span>
+  <h1>Klaar om te groeien?</h1>
+  <p>Plan een gratis en vrijblijvend strategiegesprek. Binnen 24 uur reactie gegarandeerd.</p>
+</div>
+</div>
+<section class="sec s-surf">
+<div class="container con-grid">
+  <div class="con-form">
+    <h3>Stuur ons een bericht</h3>
+    <p class="sub">We reageren binnen 24 uur op werkdagen.</p>
+    <div class="fg"><label>Naam</label><input type="text" placeholder="Jan de Vries"></div>
+    <div class="fg"><label>E-mailadres</label><input type="email" placeholder="jan@bedrijf.nl"></div>
+    <div class="fg"><label>Bedrijfsnaam</label><input type="text" placeholder="Jouw Bedrijf BV"></div>
+    <div class="fg"><label>Wat kan Webploeg voor je doen?</label>
+      <select><option>Nieuwe website laten maken</option><option>Bestaande website verbeteren</option><option>Conversie-optimalisatie</option><option>SEO verbeteren</option><option>Hosting &amp; beheer</option><option>Gratis website scan</option><option>Anders</option></select>
+    </div>
+    <div class="fg"><label>Vertel ons meer (optioneel)</label><textarea placeholder="Beschrijf je situatie, wensen of vragen..."></textarea></div>
+    <button class="f-sub" onclick="submitForm()">Stuur aanvraag →</button>
+    <p class="f-note">✓ Geen verplichtingen &nbsp;·&nbsp; ✓ Gratis en vrijblijvend</p>
+    <div class="f-ok" id="formOk">Bedankt! We nemen binnen 24 uur contact met je op.</div>
+  </div>
+  <div class="con-info">
+    <h3>Direct contact</h3>
+    <p class="intro">Bereikbaar op werkdagen van 9:00 tot 17:30. We reageren altijd snel en persoonlijk.</p>
+    <div class="info-items">
+      <div class="ii"><div class="ii-ico">📧</div><div><strong>E-mail</strong><a href="mailto:dj.ploeg.network@gmail.com">dj.ploeg.network@gmail.com</a></div></div>
+      <div class="ii"><div class="ii-ico">🕐</div><div><strong>Openingstijden</strong><p>Maandag – vrijdag &nbsp;|&nbsp; 09:00 – 17:30</p></div></div>
+      <div class="ii"><div class="ii-ico">📅</div><div><strong>Gratis strategiegesprek</strong><p>30 minuten, volledig vrijblijvend via Google Meet of telefonisch.</p></div></div>
+      <div class="ii"><div class="ii-ico">📍</div><div><strong>Locatie &amp; werkgebied</strong><p>Groningen &nbsp;·&nbsp; Heel Nederland</p></div></div>
+    </div>
+    <div class="scan-b">
+      <h4>Gratis website scan</h4>
+      <p>Vraag een gratis scan aan en ontvang binnen 48 uur een rapport met concrete verbeterpunten. Geen verplichtingen.</p>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+
+<!-- FOOTER -->
+<footer>
+<div class="container">
+  <div class="ft">
+    <div class="fb">
+      <div class="foot-logo">
+        <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
+          <polygon points="6,4 6,32 30,18" fill="#C9A84C"/>
+          <polygon points="6,4 6,18 18,18" fill="rgba(255,255,255,0.1)"/>
+        </svg>
+        <div class="foot-logo-name">Webploeg<small>Websites op maat</small></div>
+      </div>
+      <p>Websites die bezoekers omzetten in betalende klanten. Webdesign, CRO, SEO en hosting voor bedrijven die willen groeien.</p>
+    </div>
+    <div class="fc"><h5>Diensten</h5><ul><li><a href="#" onclick="show('diensten');return false">Website Design</a></li><li><a href="#" onclick="show('diensten');return false">Conversie-optimalisatie</a></li><li><a href="#" onclick="show('diensten');return false">SEO Websites</a></li><li><a href="#" onclick="show('diensten');return false">Hosting &amp; Beheer</a></li></ul></div>
+    <div class="fc"><h5>Bedrijf</h5><ul><li><a href="#" onclick="show('over');return false">Over Webploeg</a></li><li><a href="#" onclick="show('contact');return false">Contact</a></li><li><a href="#" onclick="show('contact');return false">Offerte aanvragen</a></li></ul></div>
+    <div class="fc"><h5>Contact</h5><ul><li><a href="mailto:dj.ploeg.network@gmail.com">dj.ploeg.network@gmail.com</a></li><li><a href="#">Groningen · Nederland</a></li><li><a href="#">Ma–Vr 09:00–17:30</a></li></ul></div>
+  </div>
+  <div class="fbot">
+    <span>© 2025 Webploeg. Alle rechten voorbehouden.</span>
+    <span>Gemaakt met focus op <a href="#">conversie</a></span>
+  </div>
+</div>
+</footer>
+
+<script>
+function show(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('[id^="nl-"]').forEach(a=>a.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);
+  if(pg)pg.classList.add('active');
+  const nl=document.getElementById('nl-'+id);
+  if(nl)nl.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function toggleMob(){
+  document.getElementById('mobNav').classList.toggle('open');
+  document.getElementById('ham').classList.toggle('open');
+}
+function toggleFaq(id){
+  const item=document.getElementById(id);
+  const body=item.querySelector('.faq-body');
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>{
+    i.classList.remove('open');
+    i.querySelector('.faq-body').classList.remove('open');
+  });
+  if(!isOpen){
+    item.classList.add('open');
+    body.classList.add('open');
+  }
+}
+function submitForm(){
+  const btn=document.querySelector('.f-sub');
+  const ok=document.getElementById('formOk');
+  btn.textContent='Verzonden!';
+  btn.style.background='var(--teal-dark)';
+  ok.style.display='block';
+  setTimeout(()=>{btn.textContent='Stuur aanvraag →';btn.style.background='';ok.style.display='none';},4000);
+}
+</script>
+</body>
+</html>
